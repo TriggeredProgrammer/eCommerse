@@ -5,7 +5,10 @@ const ApiFeature = require("../utils/apifeatures");
 const { query } = require("express");
 
 // Create product -- ADMIN
+
 exports.createProduct = catchAsyncErrors(async (req, res, next) => {
+  // this is not working point for forget password
+  req.body.user = req.body.id;
   const product = await Product.create(req.body);
 
   res.status(201).json({
@@ -17,17 +20,17 @@ exports.createProduct = catchAsyncErrors(async (req, res, next) => {
 // Get all products
 exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
   const resultPerPage = 5;
-  const productCount=await Product.countDocuments();
+  const productCount = await Product.countDocuments();
   const apiFeature = new ApiFeature(Product.find(), req.query)
     .search()
     .filter()
     .pagination(resultPerPage); // Fixed the typo here
   const products = await apiFeature.query;
-   
+
   res.status(200).json({
     success: true,
     products,
-    productCount
+    productCount,
   });
 });
 
